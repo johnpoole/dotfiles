@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(cd *)",
+      "Bash(cd * && python *)",
+      "Bash(cd * && python3 *)",
+      "Bash(pip *)",
+      "Bash(playwright *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(curl *)",
+      "Bash(grep *)",
+      "Bash(dd *)",
+      "Bash(ls *)",
+      "Bash(wc *)",
+      "Bash(adb *)",
+      "Bash(node *)",
+      "Bash(perl *)",
+      "Bash(for *)",
+      "Edit(*)",
+      "Write(*)",
+      "Read(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Read(//tmp/**)",
+      "Bash(python -c \":*)",
+      "Read(//c/Users/jdpoo/Documents/GitHub/Calcutta/**)",
+      "Read(//c/Users/jdpoo/Documents/GitHub/**)",
+      "Read(//c/Users/jdpoo/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\jdpoo\\.claude\\projects\\c--Users-jdpoo-Documents-GitHub-Yarbo-emulator\\memory",
+      "c:\\Users\\jdpoo\\Documents\\GitHub\\Yarbo_emulator",
+      "C:\\Users\\jdpoo\\.claude",
+      "\\tmp",
+      "C:\\Users\\jdpoo\\Documents\\GitHub\\Calcutta"
+    ]
+  }
+}

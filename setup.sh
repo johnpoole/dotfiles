@@ -24,6 +24,7 @@ echo "Setting up dotfiles from $DOTFILES"
 echo
 
 link "$DOTFILES/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+link "$DOTFILES/claude/settings.json" "$HOME/.claude/settings.json"
 
 echo
 echo "Done."
