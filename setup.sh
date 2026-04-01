@@ -25,6 +25,7 @@ echo
 
 link "$DOTFILES/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 link "$DOTFILES/claude/settings.json" "$HOME/.claude/settings.json"
+link "$DOTFILES/claude/commands/scaffold.md" "$HOME/.claude/commands/scaffold.md"
 
 echo
 echo "Done."
