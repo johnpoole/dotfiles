@@ -1,6 +1,12 @@
-Create the .claude/ folder structure in the current project directory with the following files and folders. If .claude/ already exists, stop and ask before overwriting anything.
+Bring the current project directory up to current scaffold standards. Works on both new projects (creates everything) and existing projects (adds missing files and sections without overwriting existing content).
 
-## Structure to create
+## How to run
+
+1. Check whether `.claude/` exists.
+   - If it does **not** exist: create the full structure (all files below), then jump to **After creating**.
+   - If it does exist: run in **idempotent mode** — check each file and section individually. Add what is missing; skip what already exists. Track every decision.
+
+## Target structure
 
 ```
 .claude/
@@ -19,7 +25,7 @@ Create the .claude/ folder structure in the current project directory with the f
     └── advisor.md
 ```
 
-## File contents
+## File contents (use these when creating from scratch or adding a missing file)
 
 ### CLAUDE.md
 Primary project instructions. Create with these sections as TODO placeholders:
@@ -28,7 +34,60 @@ Primary project instructions. Create with these sections as TODO placeholders:
 - **Coding Conventions** — naming, formatting, error handling
 - **Gotchas** — non-obvious behaviors and known issues
 
-Also include a literal **Advisor Pattern** section (not a placeholder — include the full content below):
+Also include the full **Advisor Pattern** section (see below — this is not a placeholder).
+
+### CLAUDE.local.md
+Empty personal overrides file with a comment explaining its purpose. This file is auto-gitignored by Claude.
+
+### settings.json
+```json
+{
+  "$schema": "https://claude.ai/schemas/claude-settings.json",
+  "permissions": {
+    "allow": [],
+    "deny": []
+  }
+}
+```
+
+### settings.local.json
+Same as settings.json. This file is auto-gitignored by Claude.
+
+### rules/testing.md
+A scoped rule with YAML frontmatter targeting `tests/**`, `**/*_test.*`, and `**/*.test.*`. Placeholder for testing conventions.
+
+### commands/review.md
+A command that reviews the current git diff for bugs, silent failures, dead code, and missing error handling. Runs `git diff` and summarizes findings as a checklist.
+
+### skills/refactor/SKILL.md
+A skill that triggers on refactoring requests. Steps: read target files, run tests for baseline, make changes, re-run tests, remove dead code.
+
+### agents/reviewer.md
+A code review subagent using sonnet model with Read, Grep, and Glob tools. Reviews for correctness, silent failures, security issues, and dead code.
+
+### agents/advisor.md
+```markdown
+---
+name: advisor
+description: Opus-backed advisor. Call before committing to an approach, when stuck, or before declaring a task done.
+model: claude-opus-4-6
+tools: []
+---
+
+You are a senior advisor reviewing work in progress. You receive the full conversation history automatically — the task, every tool call made, every result seen.
+
+Your role:
+- Identify misunderstandings of the task before work goes in the wrong direction
+- Catch silent failures, missing error handling, and over-engineering
+- Flag when an approach won't work or has a simpler alternative
+- Verify completion: does the deliverable actually satisfy the request?
+
+Be direct. No filler. If the work is on track, say so briefly. If something is wrong, say exactly what and why.
+```
+
+## Advisor Pattern section (for CLAUDE.md)
+
+This block must appear in CLAUDE.md. In idempotent mode: read the existing CLAUDE.md and check whether a `## Advisor Pattern` heading exists. If it does not, append this section verbatim. If it does exist, skip it.
 
 ```markdown
 ## Advisor Pattern
@@ -68,60 +127,45 @@ On tasks longer than a few steps, call advisor at least once before committing t
 - Beta header required: `advisor-tool-2026-03-01`
 ```
 
-### CLAUDE.local.md
-Empty personal overrides file with a comment explaining its purpose. This file is auto-gitignored by Claude.
+## Idempotent mode rules
 
-### settings.json
-```json
-{
-  "$schema": "https://claude.ai/schemas/claude-settings.json",
-  "permissions": {
-    "allow": [],
-    "deny": []
-  }
-}
-```
+For each item below, check existence first — never overwrite:
 
-### settings.local.json
-Same as settings.json. This file is auto-gitignored by Claude.
+| Item | Check | Action if missing |
+|------|-------|-------------------|
+| `CLAUDE.md` | File exists? | Create with placeholder sections + Advisor Pattern |
+| `## Advisor Pattern` in CLAUDE.md | Heading present in file? | Append the section to end of file |
+| `CLAUDE.local.md` | File exists? | Create empty with comment |
+| `settings.json` | File exists? | Create with default content |
+| `settings.local.json` | File exists? | Create with default content |
+| `rules/testing.md` | File exists? | Create |
+| `commands/review.md` | File exists? | Create |
+| `skills/refactor/SKILL.md` | File exists? | Create |
+| `agents/reviewer.md` | File exists? | Create |
+| `agents/advisor.md` | File exists? | Create |
 
-### rules/testing.md
-A scoped rule with YAML frontmatter targeting `tests/**`, `**/*_test.*`, and `**/*.test.*`. Placeholder for testing conventions.
-
-### commands/review.md
-A command that reviews the current git diff for bugs, silent failures, dead code, and missing error handling. Runs `git diff` and summarizes findings as a checklist.
-
-### skills/refactor/SKILL.md
-A skill that triggers on refactoring requests. Steps: read target files, run tests for baseline, make changes, re-run tests, remove dead code.
-
-### agents/reviewer.md
-A code review subagent using sonnet model with Read, Grep, and Glob tools. Reviews for correctness, silent failures, security issues, and dead code.
-
-### agents/advisor.md
-An Opus-backed advisor agent for the Claude advisor pattern. See the **Advisor Pattern** section in CLAUDE.md for usage.
-
-The file should contain:
-```markdown
----
-name: advisor
-description: Opus-backed advisor. Call before committing to an approach, when stuck, or before declaring a task done.
-model: claude-opus-4-6
-tools: []
----
-
-You are a senior advisor reviewing work in progress. You receive the full conversation history automatically — the task, every tool call made, every result seen.
-
-Your role:
-- Identify misunderstandings of the task before work goes in the wrong direction
-- Catch silent failures, missing error handling, and over-engineering
-- Flag when an approach won't work or has a simpler alternative
-- Verify completion: does the deliverable actually satisfy the request?
-
-Be direct. No filler. If the work is on track, say so briefly. If something is wrong, say exactly what and why.
-```
+Never merge, diff, or partially edit any file except CLAUDE.md (where only a missing section is appended). All other files: either they exist (skip) or they don't (create).
 
 ## After creating
 
 If a .gitignore exists, add `.claude/CLAUDE.local.md` and `.claude/settings.local.json` to it (if not already present).
 
-Tell the user to edit `.claude/CLAUDE.md` first with their project-specific details.
+## Summary output
+
+After finishing, print a two-column summary:
+
+```
+Scaffold complete.
+
+Added:
+  ✓ .claude/agents/advisor.md
+  ✓ .claude/CLAUDE.md → appended ## Advisor Pattern section
+
+Skipped (already exists):
+  – .claude/CLAUDE.md
+  – .claude/settings.json
+  – .claude/agents/reviewer.md
+  ...
+```
+
+Then tell the user to edit `.claude/CLAUDE.md` with their project-specific details if any placeholders remain.
