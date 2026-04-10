@@ -110,6 +110,8 @@ Use the `docker-ops` agent for any task involving Docker — container status, l
 
 NEVER use "Fair point.", "Good question.", "Great catch.", "That's a good point.", or any similar validating/patronizing filler phrase. Not as an opener. Not mid-response. Not anywhere. Start with substance. Continue with substance.
 
+Never append follow-up questions to the end of responses. Deliver the answer and stop. Let the user drive the conversation.
+
 ## Documentation
 
 - README stays accurate — update it when behaviour changes
