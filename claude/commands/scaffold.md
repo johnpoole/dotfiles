@@ -2,9 +2,7 @@ Bring the current project directory up to current scaffold standards. Works on b
 
 ## How to run
 
-1. Check whether `.claude/` exists.
-   - If it does **not** exist: create the full structure (all files below), then jump to **After creating**.
-   - If it does exist: run in **idempotent mode** — check each file and section individually. Add what is missing; skip what already exists. Track every decision.
+Work through the checklist in **Idempotent mode rules** below, item by item, regardless of whether `.claude/` already exists. Each item has its own existence check — a file existing does NOT mean its sections are present. Never skip a row because a parent file or directory exists.
 
 ## Target structure
 
@@ -129,20 +127,22 @@ On tasks longer than a few steps, call advisor at least once before committing t
 
 ## Idempotent mode rules
 
-For each item below, check existence first — never overwrite:
+Work through every row. Each row is an independent check — do not skip a row because a parent file already exists.
 
-| Item | Check | Action if missing |
-|------|-------|-------------------|
-| `CLAUDE.md` | File exists? | Create with placeholder sections + Advisor Pattern |
-| `## Advisor Pattern` in CLAUDE.md | Heading present in file? | Append the section to end of file |
-| `CLAUDE.local.md` | File exists? | Create empty with comment |
-| `settings.json` | File exists? | Create with default content |
-| `settings.local.json` | File exists? | Create with default content |
-| `rules/testing.md` | File exists? | Create |
-| `commands/review.md` | File exists? | Create |
-| `skills/refactor/SKILL.md` | File exists? | Create |
-| `agents/reviewer.md` | File exists? | Create |
-| `agents/advisor.md` | File exists? | Create |
+| # | Item | How to check | Action if missing |
+|---|------|-------------|-------------------|
+| 1 | `.claude/CLAUDE.md` | Does the file exist? | Create it with placeholder sections + Advisor Pattern section |
+| 2 | `## Advisor Pattern` heading in `.claude/CLAUDE.md` | **Read the file and grep for the exact string `## Advisor Pattern`.** If the grep finds no match, the section is missing — even if the file is large and looks complete. | Append the full Advisor Pattern block (from the section below) to the end of the file. Do not modify any existing content. |
+| 3 | `.claude/CLAUDE.local.md` | Does the file exist? | Create empty with comment |
+| 4 | `.claude/settings.json` | Does the file exist? | Create with default content |
+| 5 | `.claude/settings.local.json` | Does the file exist? | Create with default content |
+| 6 | `.claude/rules/testing.md` | Does the file exist? | Create |
+| 7 | `.claude/commands/review.md` | Does the file exist? | Create |
+| 8 | `.claude/skills/refactor/SKILL.md` | Does the file exist? | Create |
+| 9 | `.claude/agents/reviewer.md` | Does the file exist? | Create |
+| 10 | `.claude/agents/advisor.md` | Does the file exist? | Create |
+
+Row 2 always runs — even when row 1 was skipped because CLAUDE.md already existed. A file existing is not evidence that its sections are present.
 
 Never merge, diff, or partially edit any file except CLAUDE.md (where only a missing section is appended). All other files: either they exist (skip) or they don't (create).
 
@@ -152,20 +152,24 @@ If a .gitignore exists, add `.claude/CLAUDE.local.md` and `.claude/settings.loca
 
 ## Summary output
 
-After finishing, print a two-column summary:
+After finishing, print a summary with three categories:
 
 ```
 Scaffold complete.
 
-Added:
+Created:
   ✓ .claude/agents/advisor.md
+
+Updated (file existed, missing sections added):
   ✓ .claude/CLAUDE.md → appended ## Advisor Pattern section
 
-Skipped (already exists):
-  – .claude/CLAUDE.md
-  – .claude/settings.json
-  – .claude/agents/reviewer.md
+Skipped (up to date):
+  – .claude/CLAUDE.md (file exists, ## Advisor Pattern present)
+  – .claude/settings.json (file exists)
+  – .claude/agents/reviewer.md (file exists)
   ...
 ```
+
+The "Skipped" entry for CLAUDE.md must confirm that the section was found, not just that the file exists. If you skipped row 2 because the section was present, say so explicitly.
 
 Then tell the user to edit `.claude/CLAUDE.md` with their project-specific details if any placeholders remain.
